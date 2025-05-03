@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kodekloud
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kk-deployment
+  namespace: kodekloud
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kk-app
+      team: kk-app
+  template:
+    metadata:
+      labels:
+        app: kk-app
+        team: kk-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: kkapp
+        image: kodekloud/webapp-color:v1
+        securityContext:
+          runAsUser: 1000
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kodekloud
+  labels:
+    app: kk-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kk-deployment
+  namespace: kodekloud
+  labels:
+    app: kk-app
+    team: kk-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kk-app
+      team: kk-app
+  template:
+    metadata:
+      labels:
+        app: kk-app
+        team: kk-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: kkapp
+        image: kodekloud/webapp-color:v1
+        securityContext:
+          runAsUser: 1000

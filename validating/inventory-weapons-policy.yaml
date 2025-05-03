@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: inventory-weapons-policy
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-deployment-label
+    match:
+      resources:
+        kinds:
+        - Deployment
+    validate:
+      message: "Deployments must have the label 'inventory: weapons'"
+      pattern:
+        metadata:
+          labels:
+            inventory: "weapons"

@@ -1,0 +1,25 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-pod-communication
+spec:
+  rules:
+  - name: restrict-internal-communication
+    match:
+      resources:
+        kinds:
+        - Pod
+    validate:
+      message: "Pods should not be able to communicate with each other internally."
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              capabilities:
+                drop:
+                - ALL
+              allowPrivilegeEscalation: false
+          hostNetwork: false
+          hostPID: false
+          hostIPC: false
+          dnsPolicy: ClusterFirstWithHostNet

@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: mandatory-labels
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: validate-department-label
+    match:
+      resources:
+        kinds:
+        - Pod
+        - Deployment
+    validate:
+      message: "All Pods and Deployments must have a department label with an acceptable value (finance, engineering, marketing, sales, hr)."
+      pattern:
+        metadata:
+          labels:
+            department: "?*"
+    preconditions:
+      all:
+      - key: "{{ request.object.metadata.labels.department }}"
+        operator: In
+        value: ["finance", "engineering", "marketing", "sales", "hr"]

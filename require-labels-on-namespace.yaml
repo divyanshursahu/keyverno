@@ -1,0 +1,18 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels-on-namespace
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: check-for-labels
+    match:
+      resources:
+        kinds:
+        - Namespace
+    validate:
+      message: "Namespaces must have labels. Please add labels to the namespace."
+      pattern:
+        metadata:
+          labels:
+            app: "?*"

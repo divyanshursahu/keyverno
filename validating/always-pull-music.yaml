@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: always-pull-music
+spec:
+  rules:
+  - name: set-image-pull-policy
+    match:
+      resources:
+        kinds:
+        - Pod
+        namespaceSelector:
+          matchLabels:
+            name: music
+    mutate:
+      patchStrategicMerge:
+        spec:
+          containers:
+          - (name): "*"
+            imagePullPolicy: "Always"

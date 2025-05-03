@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-default-resource-limits
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: validate-resource-requests-limits
+    match:
+      resources:
+        kinds:
+        - Pod
+    validate:
+      message: "Resource limits and requests must be set to memory: 128Mi/256Mi and CPU: 250m/500m."
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "256Mi"
+                cpu: "500m"
+              requests:
+                memory: "128Mi"
+                cpu: "250m"

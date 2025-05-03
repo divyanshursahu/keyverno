@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: security-high-policy
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-secret-annotation
+    match:
+      resources:
+        kinds:
+        - Secret
+    validate:
+      message: "Secrets must have the annotation 'security: high'"
+      pattern:
+        metadata:
+          annotations:
+            security: "high"
